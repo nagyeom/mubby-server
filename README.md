@@ -1,5 +1,5 @@
-# MUBBY
-Server for speech streaming processing with artik053.
+# Mubby
+ARTIK053과의 음성스트리밍 처리 및 인공지능 대화 서비스를 위한 서버.
 
 ## [process](https://github.com/Soosang-9/Mubby/tree/test/__process)
 ```bash
