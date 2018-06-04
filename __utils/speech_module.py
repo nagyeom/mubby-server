@@ -1,10 +1,13 @@
 #-*- coding:utf-8 -*-
 
 import speech_recognition as sr
-import urllib.request
 import os
 from gtts import gTTS
+# 아마존 TTS
 from boto3 import client
+# 제이슨
+import urllib.request
+
 
 class SpeechToText:
     def __init__(self):
@@ -15,12 +18,13 @@ class SpeechToText:
             r = sr.Recognizer()
             audio = r.record(source)
             try:
-                self.result_audio_stt = r.recognize_google(audio, show_all=False, language='ko_KR')
+                self.output_stt = r.recognize_google(audio, show_all=False, language='ko_KR')
             except Exception as e:
                 print(e)
         print("Success Google STT")
 
         return self.output_stt
+
 
 class TextToSpeech:
     def __init__(self):
@@ -49,7 +53,7 @@ class TextToSpeech:
         response = urllib.request.urlopen(request, data=data.encode('utf-8'))
         rescode = response.getcode()
 
-        if (rescode == 200):
+        if rescode == 200:
             print("Saving Naver-Clova TTS mp3")
             response_body = response.read()
             with open(self.output_ntts, 'wb') as f:
