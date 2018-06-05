@@ -26,7 +26,6 @@ class SpeechToText:
         return self.output_stt
 
 
-# 어떻게 동작하는지 확인할 것
 class TextToSpeech:
     def __init__(self):
         self.output_gtts = "output_gtts.mp3"    # gtts

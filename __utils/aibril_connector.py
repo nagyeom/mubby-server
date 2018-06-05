@@ -7,11 +7,6 @@ import os
 
 class WatsonServer:
     def __init__(self):
-        # 환경변수가 설정 안 되어있을 때도 에러를 반환해야한다.
-
-        # client 마다 객체에 context 를 넣었다가 호출해야하는 것은 아닐까?
-        # 대화가 이어지기 위해서는 이전의 context 값이 필요하다.
-        # Aibril 에 접근하기 위해서는 watson id 가 필요하다.
         self.watson_username = os.getenv('watson_username')
         self.watson_password = os.getenv('watson_password')
         self.watson_workspace = os.getenv('watson_workspace')
@@ -33,8 +28,6 @@ class WatsonServer:
             )
             response = self.conversation.message(
                 workspace_id=self.watson_workspace,
-                # message_input 을 여기다 안 해줘도 상관없지 않나?
-                # context 도 connection 부분에서는 사용하는게 현재로는 없어 보인다.
                 message_input={'text': ''},
                 context=self.context
             )
@@ -55,7 +48,6 @@ class WatsonServer:
             context=self.context
         )
 
-        # response type 출력 해볼 것, json parsing 이 딱히 필요 없을 수도
         json_response = json.dumps(response, indent=2, ensure_ascii=False)
         dict_response = json.loads(json_response)
 
@@ -67,15 +59,8 @@ class WatsonServer:
         try:
             # ==================================================
             #   Parsing response
-            # 얘만 따로 try, catch 로 감싸서 text 가 없는 경우에도 대비해야 한다.
-            # 답이 없을 수도 있다. header 를 먼저 받아와야 한다.
-            # header > text > language 순으로 정의해야한다.
             # ==================================================
             result_conv = dict_response['output']['text'][0]
-            # check this action
-            # 다음 문장 추가해서 읽는 것 같은데, 이건 왜 하는 건가?
-            # 아래 두 줄은 없어도 동작이 잘 되었었다.
-            # 여러개의 문장을 읽어와서 연결하도록 하기 위해 사용 하는 것 같다.
             if len(dict_response['output']['text']) > 1:
                 result_conv += " " + dict_response['output']['text'][1]
         except Exception as e:
@@ -91,9 +76,6 @@ class WatsonServer:
 
             # ==================================================
             #   Update context
-            # context 안에 변수 넣어서 에이브릴에서 사용하게 할 수 있음.
-            # 딕셔너리 value 안에 리스트 혹은 딕셔너리로 사용.
-            # 사용 후에 value 삭제 후  update.
             # ==================================================
             self.context.update(dict_response['context'])
 
@@ -110,7 +92,6 @@ class WatsonServer:
 
             # --------------------------------------------------
             #   << Check Translate >>
-            # 언어 설정하는 부분인데, 현재는 통역이 안되서 그냥 반환만 하고 있음.
         try:
             language = (result_conv.split())[-1]
         except Exception as e:
