@@ -2,3 +2,9 @@
 \.idea/
 
 env/
+
+__process/__pycache__/
+
+__utils/__pycache__/
+
+__user_audio/
