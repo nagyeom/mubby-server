@@ -4,3 +4,4 @@ SpeechRecognition==3.8.1
 gTTS==1.2.2
 boto3
 awscli
+PyMySQL
