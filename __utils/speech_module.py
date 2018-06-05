@@ -3,8 +3,10 @@
 import speech_recognition as sr
 import urllib.request
 import os
+
 from gtts import gTTS
 from boto3 import client
+
 
 class SpeechToText:
     def __init__(self):

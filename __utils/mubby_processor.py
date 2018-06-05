@@ -1,10 +1,11 @@
-from ..Utils import stt_tts
-from ..Utils import __aibril
-from ..Utils import audio_converter
+from __utils import speech_module
+from __utils import aibril_connector
+from __utils import audio_converter
 
-stt_conn = stt_tts.SpeechToText()
-tts_conn = stt_tts.TextToSpeech()
-aibril_conn = __aibril.WatsonServer
+
+stt_conn = speech_module.SpeechToText()
+tts_conn = speech_module.TextToSpeech()
+aibril_conn = aibril_connector.WatsonServer
 
 def func_mubby(input_audio):
     text = stt_conn.google_stt(input_audio)
