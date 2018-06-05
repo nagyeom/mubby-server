@@ -1,14 +1,9 @@
-# 통신부분에 대한 것을 여기다 모아야 한다.
-# 현재는 그냥 동작 돌 수 있도록 가져다 놓았다.
-# 추후 수정 필요 꼭
-# 커넥팅 후에 꼭!
-# 꼬옥!
-# 꼭!
-
+# -*- coding: utf-8 -*-
 
 class Communication:
     def __init__(self):
         self.sock = None
+        self.count = 0
 
     def setting_sock(self, sock):
         self.sock = sock
@@ -25,13 +20,13 @@ class Communication:
                     if len(data) == 0:
                         break
                     else:
-                        count += 1
-                        print('\t- data len >> ', len(data))
-                        print('\t- data count >> ', count)
                         if not self.sending(data):
                             break
 
     def sending(self, data):
+            self.count += 1
+            print('\t- data len >> ', len(data))
+            print('\t- data count >> ', self.count)
             self.sock.send(data)
             answer = self.sock.recv(1024)
             print('here_re_answer > {}'.format(answer))
