@@ -24,10 +24,6 @@ class Socket:
         self.__server.bind(ADDR)
         self.__server.listen(5)
 
-        self.client = None
-
-        print("Socket make")
-
     def getting_server(self):
         return self.__server
     #
@@ -54,13 +50,16 @@ class Socket:
         else:
             return False
 
-    def sending_wav(self, client, audio_path):
-        with open(audio_path, "rb") as wave_file:
-            data = wave_file.read()
-            self.sending(client, str(len(data)).encode())
+    def closing(self, client):
+        client.close()
 
-        answer = self.recving(client)
-        print("answer >> {} ".format(answer))
+    def sending_wav(self, client, audio_path):
+        # with open(audio_path, "rb") as wave_file:
+        #     data = wave_file.read()
+        #     self.sending(client, str(len(data)).encode())
+        #
+        # answer = self.recving(client)
+        # print("answer >> {} ".format(answer))
 
         with open(audio_path, "rb") as wave_file:
             count = 0
