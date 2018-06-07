@@ -25,11 +25,11 @@ class Communication:
 
     def sending(self, data):
             self.count += 1
-            print('\t- data len >> ', len(data))
-            print('\t- data count >> ', self.count)
+            # print('\t- data len >> ', len(data))
+            # print('\t- data count >> ', self.count)
             self.sock.send(data)
             answer = self.sock.recv(1024)
-            print('here_re_answer > {}'.format(answer))
+            # print('here_re_answer > {}'.format(answer))
 
             if answer == b'ack':
                 return True

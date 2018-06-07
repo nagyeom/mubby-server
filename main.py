@@ -37,8 +37,8 @@ wave = wavefile_sending.WaveFile()
 
 def pcm2wav(path):
     ff = FFmpeg(
-            inputs = {path: ['-f', 's16le', '-ar', '16000', '-ac', '2']},
-            outputs = {''.join([path, '.wav']): '-y'})
+            inputs={path: ['-f', 's16le', '-ar', '16000', '-ac', '2']},
+            outputs={''.join([path, '.wav']): '-y'})
     ff.run()
 
 
@@ -67,27 +67,25 @@ def handler(clientSocket, addr, communi):
             break
         f.write(buf)
 
-    print("file_recv_time = {}".format(time.time() - start))
+    file_recv_time = time.time() - start
     start = time.time()
 
     RECV_FILE = "record.wav"
     result_audio_stt = stt_conn.audio_stt(RECV_FILE)
-    print("stt_time = {}".format(time.time()-start))
+    stt_time = time.time()-start
     start = time.time()
 
     result_conversation = aibril_conn.aibril_conv(result_audio_stt)
-    print("aibril_time = {}".format(time.time()-start))
+    aibril_time = time.time()-start
     start = time.time()
-
-
 
     # ===========================================================
     tts_conn.aws_tts(result_conversation)
-    print("aws_tts_time = {}".format(time.time()-start))
+    aws_tts_time = time.time()-start
     start = time.time()
 
-    SEND_FILE = audio_converter.convert("output_gtts.mp3")
-    print("convert_time = {}".format(time.time()-start))
+    SEND_FILE = audio_converter.convert("output_atts.mp3")
+    convert_time = time.time()-start
     strat = time.time()
 
     with open(SEND_FILE, 'rb') as f:
@@ -107,7 +105,7 @@ def handler(clientSocket, addr, communi):
     # wave.set_sock(clientSocket, SEND_FILE)
     # wave.include_header()
     what = clientSocket.recv(1024)
-    print("file_send_time = {}".format(time.time()-start))
+    file_send_time = time.time()-start
     # print("what? {} ".format(what))
     clientSocket.close()
     #
@@ -130,10 +128,13 @@ def handler(clientSocket, addr, communi):
     #     else:
     #         print('- - - plz, choice 1 or 2\n')
 
+    return {"file_recv_time": file_recv_time, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time, "convert_time": convert_time, "file_send_time": file_send_time}
 
 if __name__ == '__main__':
     while True:
         # print('\nServer is running {}'.format('-'*5))
         communi = module_communication.Communication()
         clientSocket, addr = serverSocket.accept()
-        handler(clientSocket, addr, communi)
+        times = handler(clientSocket, addr, communi)
+        for key, value in times.items():
+            print("{} : {}".format(key, value))

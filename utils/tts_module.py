@@ -3,12 +3,13 @@
 from gtts import gTTS
 import urllib.request
 import os
-import boto3
+from boto3 import client
 
 class TextToSpeech:
     def __init__(self):
         self.output_gtts = "output_gtts.mp3"
         self.output_ntts = "output_ntts.mp3"
+        self.output_atts = "output_atts.mp3"
 
     def google_tts(self, text):
         language = 'ko'
