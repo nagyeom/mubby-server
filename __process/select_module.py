@@ -6,7 +6,7 @@ import time
 # file 및 dir 존재 유무를 판단하기 위해서 사용
 import os
 # 무삐의 기본 동작에 필요한 함수들이 다 들어가 있다.
-import __utils.mubby_processor as mubby
+import __utils.mubby_module as mubby
 
 
 class SocketProcess(multiprocessing.Process):
