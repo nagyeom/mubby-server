@@ -12,8 +12,6 @@ def convert(input_audio, convert_audio):
 
     # if audios[-1][-3:] == "mp3":
     #     audios[-1] = audio_converter(audios[-1][:-3])
-    # 모든 오디오를 채널, 비트 수 다 맞춰서 컨버터 해줘야 하는데 ㅠ.ㅠ 어뜨카니..
-    # 확인해서 안 되어있는거만 바꾸지뭐 ... 힘듦다..
 
     # convert_audio = "convert_audio.wav"
     cmd_convert = "ffmpeg -i {} -ar 44100 -ac 2 -y {}".format(input_audio, convert_audio)
