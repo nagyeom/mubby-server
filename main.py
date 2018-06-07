@@ -10,6 +10,8 @@ import socket
 import struct
 import os
 
+import time
+
 from utils import module_communication
 
 HOST = ''
@@ -41,41 +43,59 @@ def pcm2wav(path):
 
 
 def handler(clientSocket, addr, communi):
-    print("Connected from", addr)
+    start = time.time()
+
+    # print("Connected from", addr)
     # buf = clientSocket.recv(1024)
     # print('data > {}'.format(buf))
-
     f = open('record', 'wb')
 
-    print('ST_PROTO_RECORD_DATA')
+    # print('ST_PROTO_RECORD_DATA')
     while True:
+
         buf = clientSocket.recv(1024)
-        print('data > {}'.format(buf))
+        # print('data > {}'.format(buf))
         # if buf == b'end':
         #     print('ST_PROTO_RECORD_STOP')
         if buf[-3:] == b'end':
-            print('ST_PROTO_RECORD_STOP')
+            # print('ST_PROTO_RECORD_STOP')
             f.write(buf[:-3])
             f.close()
             pcm2wav('record')
             os.unlink('record')
-            print('Streaming end.', addr)
+            # print('Streaming end.', addr)
             break
         f.write(buf)
 
+    print("file_recv_time = {}".format(time.time() - start))
+    start = time.time()
 
     RECV_FILE = "record.wav"
     result_audio_stt = stt_conn.audio_stt(RECV_FILE)
+    print("stt_time = {}".format(time.time()-start))
+    start = time.time()
+
     result_conversation = aibril_conn.aibril_conv(result_audio_stt)
+    print("aibril_time = {}".format(time.time()-start))
+    start = time.time()
+
+
+
+    # ===========================================================
     tts_conn.google_tts(result_conversation)
+    print("aws_tts_time = {}".format(time.time()-start))
+    start = time.time()
+
     SEND_FILE = audio_converter.convert("output_gtts.mp3")
+    print("convert_time = {}".format(time.time()-start))
+    strat = time.time()
 
     with open(SEND_FILE, 'rb') as f:
         data = f.read()
-    print("size >> {}".format(len(data)))
+    # print("size >> {}".format(len(data)))
     clientSocket.send(str(len(data)).encode())
     a = clientSocket.recv(1024)
-    print("recv{}".format(a))
+    # print("recv{}".format(a))
     communi.sending_wav(clientSocket, SEND_FILE)
     #
     # print('send file name > {}'.format(SEND_FILE))# "output_tts.wav"
@@ -87,7 +107,8 @@ def handler(clientSocket, addr, communi):
     # wave.set_sock(clientSocket, SEND_FILE)
     # wave.include_header()
     what = clientSocket.recv(1024)
-    print("what? {} ".format(what))
+    print("file_send_time = {}".format(time.time()-start))
+    # print("what? {} ".format(what))
     clientSocket.close()
     #
     # while True:
@@ -112,7 +133,8 @@ def handler(clientSocket, addr, communi):
 
 if __name__ == '__main__':
     while True:
-        print('\nServer is running {}'.format('-'*5))
+        # print('\nServer is running {}'.format('-'*5))
         communi = module_communication.Communication()
         clientSocket, addr = serverSocket.accept()
+
         handler(clientSocket, addr, communi)

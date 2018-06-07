@@ -16,7 +16,7 @@ class SpeechToText:
             except Exception as e:
                 print(e)
 
-        print("USER>>", self.result_audio_stt)
+        # print("USER >>", self.result_audio_stt)
 
         return self.result_audio_stt
 
