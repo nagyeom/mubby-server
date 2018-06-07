@@ -43,6 +43,7 @@ def pcm2wav(path):
 
 
 def handler(clientSocket, addr, communi):
+    print("accept")
     start = time.time()
 
     # print("Connected from", addr)
@@ -74,10 +75,13 @@ def handler(clientSocket, addr, communi):
     result_audio_stt = stt_conn.audio_stt(RECV_FILE)
     stt_time = time.time()-start
     start = time.time()
+    User = result_audio_stt
 
     result_conversation = aibril_conn.aibril_conv(result_audio_stt)
     aibril_time = time.time()-start
     start = time.time()
+
+    Mubby = result_conversation
 
     # ===========================================================
     tts_conn.aws_tts(result_conversation)
@@ -128,7 +132,21 @@ def handler(clientSocket, addr, communi):
     #     else:
     #         print('- - - plz, choice 1 or 2\n')
 
-    return {"file_recv_time": file_recv_time, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time, "convert_time": convert_time, "file_send_time": file_send_time}
+    return {"User": User, "Mubby": Mubby, "file_recv_time": file_recv_time, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time, "convert_time": convert_time, "file_send_time": file_send_time}
+
+
+def __print(dic):
+    print("\n{}".format('= = ' * 10))
+    print("{} >> {}".format("User", dic["User"]))
+    print("{} >> {}".format("Mubby", dic["Mubby"]))
+    print("{}".format('- - '*10))
+    print("{} : {}".format("file_recv_time", dic["file_recv_time"]))
+    print("{} : {}".format("stt_time", dic["stt_time"]))
+    print("{} : {}".format("aibril_time", dic["aibril_time"]))
+    print("{} : {}".format("aws_tts_time", dic["aws_tts_time"]))
+    print("{} : {}".format("convert_time", dic["convert_time"]))
+    print("{} : {}".format("file_send_time", dic["file_send_time"]))
+    print("{}".format('= = ' * 10))
 
 if __name__ == '__main__':
     while True:
@@ -136,5 +154,5 @@ if __name__ == '__main__':
         communi = module_communication.Communication()
         clientSocket, addr = serverSocket.accept()
         times = handler(clientSocket, addr, communi)
-        for key, value in times.items():
-            print("{} : {}".format(key, value))
+        __print(times)
+
