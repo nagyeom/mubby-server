@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-
 from watson_developer_cloud import conversation_v1
 import json
 import os
@@ -18,6 +17,8 @@ class WatsonServer:
         self.conversation = None
         self.aibril_conv_connect()
 
+        print("Watson Server make")
+
     def aibril_conv_connect(self):
         try:
             self.conversation = conversation_v1.ConversationV1(
@@ -26,6 +27,7 @@ class WatsonServer:
                 version=self.watson_version,
                 url=self.watson_url
             )
+
             response = self.conversation.message(
                 workspace_id=self.watson_workspace,
                 message_input={'text': ''},
@@ -39,6 +41,7 @@ class WatsonServer:
             return "에이브릴 대화서버에 접속 할 수 없습니다."
 
     def aibril_conv(self, text):
+        print("text >> {}".format(text))
         if self.watson_conv_id == '':
             self.aibril_conv_connect()
 
@@ -48,6 +51,9 @@ class WatsonServer:
             context=self.context
         )
 
+        print("response >> {}".format(response))
+
+        # response type 출력 해볼 것, json parsing 이 딱히 필요 없을 수도
         json_response = json.dumps(response, indent=2, ensure_ascii=False)
         dict_response = json.loads(json_response)
 
@@ -59,6 +65,7 @@ class WatsonServer:
         try:
             # ==================================================
             #   Parsing response
+            # header > text > language 순으로 정의해야한다.
             # ==================================================
             result_conv = dict_response['output']['text'][0]
             if len(dict_response['output']['text']) > 1:
@@ -106,11 +113,10 @@ class WatsonServer:
             language = 'zh'
         else:
             language = 'ko'
+        # --------------------------------------------------
 
-            # --------------------------------------------------
-            return header, result_conv, language
-
-        return result_conv
+        print("return")
+        return header, result_conv, language
 
 
 # aibril_connector.py 만 동작해서 Aibril 대화셋 동작을 확인 할 수 있다.

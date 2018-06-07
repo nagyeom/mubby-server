@@ -2,6 +2,7 @@
 
 import speech_recognition as sr
 import os
+
 from gtts import gTTS
 # 아마존 TTS
 from boto3 import client
@@ -9,19 +10,24 @@ from boto3 import client
 import urllib.request
 
 
+
 class SpeechToText:
     def __init__(self):
         self.output_stt = ""
 
     def google_stt(self, filename):
+        print("filename >> {}".format(filename))
+
         with sr.AudioFile(filename) as source:
             r = sr.Recognizer()
             audio = r.record(source)
             try:
                 self.output_stt = r.recognize_google(audio, show_all=False, language='ko_KR')
+                print("Success Google STT")
             except Exception as e:
-                print(e)
-        print("Success Google STT")
+                print("Google STT false >> {}".format(e))
+
+        print("self.output_stt >> {}".format(self.output_stt))
 
         return self.output_stt
 
@@ -79,3 +85,9 @@ class TextToSpeech:
         print("Saving AWS-Polly TTS mp3")
 
         return self.output_atts
+
+
+if __name__ == "__main__":
+    name = "../__user_audio/192.168.0.1/record.wav"
+    s = SpeechToText()
+    a = s.google_stt(name)

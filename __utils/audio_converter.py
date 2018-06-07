@@ -3,14 +3,17 @@ from ffmpy import FFmpeg
 import wave
 
 
-def convert(input_audio):
+def convert(input_audio, convert_audio):
     # ================ Audio converter =================
     #   - mp3 to wav
     #   - sample rate(22050Hz to 44100Hz)
     #   - channel(mono to stereo)
     # ==================================================
 
-    convert_audio = "convert_audio.wav"
+    # if audios[-1][-3:] == "mp3":
+    #     audios[-1] = audio_converter(audios[-1][:-3])
+
+    # convert_audio = "convert_audio.wav"
     cmd_convert = "ffmpeg -i {} -ar 44100 -ac 2 -y {}".format(input_audio, convert_audio)
     os.system(cmd_convert)
     print("Convert mp3 to wav")
@@ -18,10 +21,10 @@ def convert(input_audio):
     return convert_audio
 
 
-def pcm2wav(path):
+def pcm2wav(path, extension):
     ff = FFmpeg(
             inputs={path: ['-f', 's16le', '-ar', '16000', '-ac', '2']},
-            outputs={''.join([path, '.wav']): '-y'})
+            outputs={''.join([path, extension]): '-y'})
     ff.run()
 
 
