@@ -9,7 +9,7 @@ def convert(input_audio):
     #   - channel(mono to stereo)
     # ==================================================
     convert_audio = "output_tts.wav"
-    cmd_convert = "ffmpeg -i {} -ar 44100 -ac 2 -y {}".format(input_audio, convert_audio)
+    cmd_convert = "ffmpeg -i {} -ar 16000 -ac 1 -y {}".format(input_audio, convert_audio)
     os.system(cmd_convert)
     print("Convert mp3 to wav")
 
