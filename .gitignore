@@ -14,3 +14,9 @@ utils/__pycache__/
 utils/
 
 record
+
+output_gtts\.mp3
+
+output_tts\.wav
+
+record\.wav
