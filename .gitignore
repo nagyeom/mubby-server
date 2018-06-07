@@ -12,3 +12,9 @@ __user_audio/
 *.pyc
 
 record
+
+output_atts\.mp3
+
+output_tts\.wav
+
+record\.wav
