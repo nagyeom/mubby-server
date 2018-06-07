@@ -20,3 +20,5 @@ output_gtts\.mp3
 output_tts\.wav
 
 record\.wav
+
+*.wav

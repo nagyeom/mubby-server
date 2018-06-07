@@ -3,6 +3,7 @@
 from gtts import gTTS
 import urllib.request
 import os
+import boto3
 
 class TextToSpeech:
     def __init__(self):
@@ -39,3 +40,20 @@ class TextToSpeech:
             print("Error Code:" + rescode)
 
         return self.output_ntts
+
+    def aws_tts(self, text):
+        polly = client("polly", region_name="ap-northeast-2")
+
+        response = polly.synthesize_speech(
+            Text=text,
+            OutputFormat="mp3",
+            VoiceId="Seoyeon")
+
+        stream = response.get("AudioStream")
+
+        with open(self.output_atts, 'wb') as f:
+            data = stream.read()
+            f.write(data)
+        # print("Saving AWS-Polly TTS mp3")
+
+        return self.output_atts

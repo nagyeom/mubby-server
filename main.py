@@ -82,7 +82,7 @@ def handler(clientSocket, addr, communi):
 
 
     # ===========================================================
-    tts_conn.google_tts(result_conversation)
+    tts_conn.aws_tts(result_conversation)
     print("aws_tts_time = {}".format(time.time()-start))
     start = time.time()
 
@@ -136,5 +136,4 @@ if __name__ == '__main__':
         # print('\nServer is running {}'.format('-'*5))
         communi = module_communication.Communication()
         clientSocket, addr = serverSocket.accept()
-
         handler(clientSocket, addr, communi)
