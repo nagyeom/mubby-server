@@ -2,11 +2,13 @@
 
 import speech_recognition as sr
 import os
+
 from gtts import gTTS
 # 아마존 TTS
 from boto3 import client
 # 제이슨
 import urllib.request
+
 
 
 class SpeechToText:
