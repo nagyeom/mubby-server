@@ -74,11 +74,13 @@ def handler(clientSocket, addr, communi):
         start = time.time()
         result_audio_stt = stt_conn.audio_stt(RECV_FILE)
         stt_time = time.time()-start
+        User = result_audio_stt
 
         # << Aibril conversation >>
         start = time.time()
         result_conversation = aibril_conn.aibril_conv(result_audio_stt)
         aibril_time = time.time()-start
+        Mubby = result_conversation
 
         # << awsPolly TTS >>
         start = time.time()
@@ -102,7 +104,7 @@ def handler(clientSocket, addr, communi):
         file_send_time = time.time()-start
         clientSocket.close()
 
-        return {"file_recv_time": file_recv_time, "pcm_to_wav_time": pcm_to_wav_time, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time, "convert_time": convert_time, "file_send_time": file_send_time}
+        return {"User": User, "Mubby": Mubby, "file_recv_time": file_recv_time, "pcm_to_wav_time": pcm_to_wav_time, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time, "convert_time": convert_time, "file_send_time": file_send_time}
 
 
 def __print(dic):
@@ -126,4 +128,4 @@ if __name__ == '__main__':
         communi = module_communication.Communication()
         clientSocket, addr = serverSocket.accept()
         times = handler(clientSocket, addr, communi)
-       __print(times)
+        __print(times)
