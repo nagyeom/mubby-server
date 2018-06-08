@@ -104,11 +104,26 @@ def handler(clientSocket, addr, communi):
 
         return {"file_recv_time": file_recv_time, "pcm_to_wav_time": pcm_to_wav_time, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time, "convert_time": convert_time, "file_send_time": file_send_time}
 
+
+def __print(dic):
+    print("\n{}".format('= = ' * 10))
+    print("{} >> {}".format("User", dic["User"]))
+    print("{} >> {}".format("Mubby", dic["Mubby"]))
+    print("{}".format('- - '*10))
+    print("{} : {}".format("file_recv_time", dic["file_recv_time"]))
+    print("{} : {}".format("pcm_to_wav_time", dic["pcm_to_wav_time"]))
+    print("{} : {}".format("stt_time", dic["stt_time"]))
+    print("{} : {}".format("aibril_time", dic["aibril_time"]))
+    print("{} : {}".format("aws_tts_time", dic["aws_tts_time"]))
+    print("{} : {}".format("convert_time", dic["convert_time"]))
+    print("{} : {}".format("file_send_time", dic["file_send_time"]))
+    print("{}".format('= = ' * 10))
+
+
 if __name__ == '__main__':
     while True:
         # print('\nServer is running {}'.format('-'*5))
         communi = module_communication.Communication()
         clientSocket, addr = serverSocket.accept()
         times = handler(clientSocket, addr, communi)
-        for key, value in times.items():
-            print("{} : {}".format(key, value))
+       __print(times)
