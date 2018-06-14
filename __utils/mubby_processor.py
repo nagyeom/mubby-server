@@ -22,6 +22,12 @@ def default(input_audio):
     return command, text, language
 
 
+def make_user_dir(client_ip):
+    if not os.path.exists('__user_audio/' + client_ip):
+        print('\tmake {} dir'.format(client_ip))
+        os.system('mkdir __user_audio/' + client_ip)
+
+
 def chat_func(client, text):
     path = "__user_audio/" + client.getpeername()[0] + "/convert_audio" + EXTENSION
 
