@@ -10,7 +10,6 @@ from boto3 import client
 import urllib.request
 
 
-
 class SpeechToText:
     def __init__(self):
         self.output_stt = ""

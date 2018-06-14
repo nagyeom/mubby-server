@@ -11,7 +11,7 @@ class Main:
         # logging process 적용 해야 한다.
         # schedule_module.Scheduling()
 
-        # tcp_server.start()
+        tcp_server.start()
 
 if __name__ == "__main__":
     main = Main()
