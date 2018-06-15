@@ -96,29 +96,31 @@ def handler(clientSocket, addr, communi):
         with open(SEND_FILE, 'rb') as f:
             data = f.read()
         print("size >> {}".format(len(data)))
-        clientSocket.send(str(len(data)).encode())
-        a = clientSocket.recv(1024)
-        # print("recv{}".format(a))
-        communi.sending_wav(clientSocket, SEND_FILE)
-        what = clientSocket.recv(1024)
-        file_send_time = time.time()-start
-        clientSocket.close()
+        answer = clientSocket.recv(1024)
+        if answer == b'tel':
+            clientSocket.send(str(len(data)).encode())
+            a = clientSocket.recv(1024)
+            # print("recv{}".format(a))
+            communi.sending_wav(clientSocket, SEND_FILE)
+            what = clientSocket.recv(1024)
+            file_send_time = time.time()-start
+            clientSocket.close()
 
-        return {"User": User, "Mubby": Mubby, "file_recv_time": file_recv_time, "pcm_to_wav_time": pcm_to_wav_time, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time, "convert_time": convert_time, "file_send_time": file_send_time}
+            return {"User": User, "Mubby": Mubby, "file_recv_time": file_recv_time, "pcm_to_wav_time": pcm_to_wav_time, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time, "convert_time": convert_time, "file_send_time": file_send_time}
 
 
 def __print(dic):
     print("\n{}".format('= = ' * 10))
-    print("{} >> {}".format("User", round(dic["User"], 2)))
-    print("{} >> {}".format("Mubby", round(dic["Mubby"], 2)))
+    print("{} >> {}".format("User", dic["User"], 2))
+    print("{} >> {}".format("Mubby", dic["Mubby"], 2))
     print("{}".format('- - '*10))
-    print("{} : {}".format("file_recv_time", round(dic["file_recv_time"], 2)))
-    print("{} : {}".format("pcm_to_wav_time", round(dic["pcm_to_wav_time"],2)))
-    print("{} : {}".format("stt_time", round(dic["stt_time"], 2)))
-    print("{} : {}".format("aibril_time", round(dic["aibril_time"], 2)))
-    print("{} : {}".format("aws_tts_time", round(dic["aws_tts_time"], 2)))
-    print("{} : {}".format("convert_time", round(dic["convert_time"], 2)))
-    print("{} : {}".format("file_send_time", round(dic["file_send_time"], 2)))
+    print("{} : {}".format("file_recv_time", dic["file_recv_time"], 2))
+    print("{} : {}".format("pcm_to_wav_time", dic["pcm_to_wav_time"],2))
+    print("{} : {}".format("stt_time", dic["stt_time"], 2))
+    print("{} : {}".format("aibril_time", dic["aibril_time"], 2))
+    print("{} : {}".format("aws_tts_time", dic["aws_tts_time"], 2))
+    print("{} : {}".format("convert_time", dic["convert_time"], 2))
+    print("{} : {}".format("file_send_time", dic["file_send_time"], 2))
     print("{}".format('= = ' * 10))
 
 
