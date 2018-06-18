@@ -14,6 +14,7 @@ class SpeechToText:
             try:
                 self.result_audio_stt = r.recognize_google(audio, show_all=False, language='ko_KR')
             except Exception as e:
+                self.result_audio_stt = ''
                 print(e)
 
         # print("USER >>", self.result_audio_stt)
