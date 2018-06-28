@@ -18,3 +18,5 @@ output_atts\.mp3
 output_tts\.wav
 
 record\.wav
+
+__utils/output_gcltts\.mp3
