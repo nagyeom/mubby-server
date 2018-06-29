@@ -55,7 +55,7 @@ def pcm2wav(client):
     input_file = open(path, 'wb')
     while True:
         data = server.recving(client)
-        print("data {}".format(data))
+        # print("data {}".format(data))
         if data[-3:] == b'end':
             print('ST_PROTO_RECORD_STOP')
             input_file.write(data[:-3])

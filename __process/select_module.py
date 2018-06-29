@@ -8,7 +8,7 @@ import time
 import os
 # 무삐의 기본 동작에 필요한 함수들이 다 들어가 있다.
 import __utils.mubby_processor as mubby
-from __utils import voice_thread
+from __utils.voice_thread import voice_thread
 
 
 class SocketProcess(multiprocessing.Process):
@@ -53,12 +53,12 @@ class Handler:
                     # 커넥션 이후 동작 수행을 위한 함수 호출
                     else:
                         # 구분자에 따라 어떤 thread 를 생성할 것인지 결정 한다.
-                        start_new_thread(voice_thread, (sock, ))
+                        start_new_thread(voice_thread, (sock,))
 
-                        # # < If select find old client >
-                        # # 실제는 이하 부분을 thread 로 돌리던지 해야 정확하게 비동기가 진행될 것 같다.
-                        # # 각 try 별로 isSuccess 를 달아서 실패하면 더 이상 동작하지 않게 해야할 것 같다.
-                        # # 이하 내용을 client = 1 class 형식으로 담아서 주고 받아야 하지 않을까 싶다.
+                        # < If select find old client >
+                        # 실제는 이하 부분을 thread 로 돌리던지 해야 정확하게 비동기가 진행될 것 같다.
+                        # 각 try 별로 isSuccess 를 달아서 실패하면 더 이상 동작하지 않게 해야할 것 같다.
+                        # 이하 내용을 client = 1 class 형식으로 담아서 주고 받아야 하지 않을까 싶다.
                         #
                         # try:
                         #     # < The server received data from client >
@@ -115,9 +115,9 @@ class Handler:
                         #     print('\t★ __send function error >> {}'.format(e))
                         #
                         # # (테스트용 모피) 한 동작 후 연결을 끊기 때문에 소켓 종료가 들어가야 서버가 여러번 정상동작을 할 수 있다.
-                        # mubby.server.close(sock)
-
-                        # 종료 쓰레드였다면 close 하고 소켓을 목록에서 삭제한다.
+                        # mubby.server.closing(sock)
+                        #
+                        # # 종료 쓰레드였다면 close 하고 소켓을 목록에서 삭제한다.
                         self.connection_list.remove(sock)
 
             except Exception as e:

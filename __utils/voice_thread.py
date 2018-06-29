@@ -60,5 +60,5 @@ def voice_thread(sock):
     except Exception as e:
         print('\t★ __send function error >> {}'.format(e))
 
-    # (테스트용 모피) 한 동작 후 연결을 끊기 때문에 소켓 종료가 들어가야 서버가 여러번 정상동작을 할 수 있다.
-    mubby.server.close(sock)
+        # (테스트용 모피) 한 동작 후 연결을 끊기 때문에 소켓 종료가 들어가야 서버가 여러번 정상동작을 할 수 있다.
+        mubby.server.closing(sock)

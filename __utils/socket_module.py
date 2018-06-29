@@ -45,7 +45,7 @@ class Socket:
         answer = client.recv(BUF_SIZE)
         print('here_re_answer > {}'.format(answer))
 
-        if answer == b'ack':
+        if answer == b'ack' or answer == b'spk':
             return True
         else:
             return False
@@ -54,27 +54,28 @@ class Socket:
         client.close()
 
     def sending_wav(self, client, audio_path):
-        # with open(audio_path, "rb") as wave_file:
-        #     data = wave_file.read()
-        #     self.sending(client, str(len(data)).encode())
-        #
-        # answer = self.recving(client)
-        # print("answer >> {} ".format(answer))
 
-        with open(audio_path, "rb") as wave_file:
-            count = 0
-            data = wave_file.read(FILE_HEADER_SIZE)
-            if self.sending(client, data):
-                while True:
-                    data = wave_file.read(FILE_READ_SIZE)
-                    if len(data) == 0:
-                        break
-                    else:
-                        count += 1
-                        print('\t- data len >> ', len(data))
-                        print('\t- data count >> ', count)
-                        if not self.sending(client, data):
-                            break
+        answer = client.recv(BUF_SIZE)
+        if answer == b'tel':
+            with open(audio_path, "rb") as wave_file:
+                data = wave_file.read()
+                is_success = self.sending(client, str(len(data)).encode())
+
+            if is_success:
+                with open(audio_path, "rb") as wave_file:
+                    count = 0
+                    data = wave_file.read(FILE_HEADER_SIZE)
+                    if self.sending(client, data):
+                        while True:
+                            data = wave_file.read(FILE_READ_SIZE)
+                            if len(data) == 0:
+                                break
+                            else:
+                                count += 1
+                                print('\t- data len >> ', len(data))
+                                print('\t- data count >> ', count)
+                                if not self.sending(client, data):
+                                    break
 
 
 
