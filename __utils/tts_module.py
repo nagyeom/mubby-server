@@ -32,7 +32,7 @@ class TextToSpeech:
         response = urllib.request.urlopen(request, data=data.encode('utf-8'))
         rescode = response.getcode()
 
-        if (rescode == 200):
+        if rescode == 200:
             print("Saving Naver TTS mp3")
             response_body = response.read()
             with open(self.output_ntts, 'wb') as f:

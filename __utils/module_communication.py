@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# from utils.audio_converter import stereo_to_mono
+# from __utils.audio_converter import stereo_to_mono
 
 BUF_SIZE = 1024
 
@@ -31,7 +31,11 @@ class Communication:
             # print('\t- data len >> ', len(data))
             # print('\t- data count >> ', self.count)
             self.sock.send(data)
-            answer = self.sock.recv(BUF_SIZE)
+            try:
+                answer = self.sock.recv(BUF_SIZE)
+            except:
+                self.sock.close()
+                return False
             # print('here_re_answer > {}'.format(answer))
 
             if answer == b'ack':
