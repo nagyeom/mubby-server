@@ -130,22 +130,22 @@ def __print(dic):
 
 if __name__ == '__main__':
     # pcm2wav('1channel_record', '1')
-    pcm2wav('2channel_record', '2')
+    # pcm2wav('2channel_record', '2')
     # pcm2wav('2channel_stereo.raw')
 
-    # serverSocket = socket.socket()
-    # serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    # serverSocket.bind(ADDR)
-    # serverSocket.listen(5)
-    #
-    # aibril_conn = aibril_conv_module.WatsonServer()
-    # stt_conn = stt_module.SpeechToText()
-    # tts_conn = tts_module.TextToSpeech()
-    # wave = wavefile_sending.WaveFile()
-    #
-    # while True:
-    #     # print('\nServer is running {}'.format('-'*5))
-    #     communi = module_communication.Communication()
-    #     clientSocket, addr = serverSocket.accept()
-    #     times = handler(clientSocket, addr, communi)
-    #     __print(times)
+    serverSocket = socket.socket()
+    serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    serverSocket.bind(ADDR)
+    serverSocket.listen(5)
+
+    aibril_conn = aibril_conv_module.WatsonServer()
+    stt_conn = stt_module.SpeechToText()
+    tts_conn = tts_module.TextToSpeech()
+    wave = wavefile_sending.WaveFile()
+
+    while True:
+        # print('\nServer is running {}'.format('-'*5))
+        communi = module_communication.Communication()
+        clientSocket, addr = serverSocket.accept()
+        times = handler(clientSocket, addr, communi)
+        __print(times)
