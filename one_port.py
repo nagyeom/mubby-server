@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 
-from utils import aibril_conv_module
-from utils import stt_module
-from utils import tts_module
-from utils import audio_converter
-from utils import wavefile_sending
+from __utils import aibril_conv_module
+from __utils import stt_module
+from __utils import tts_module
+from __utils import audio_converter
+from __utils import wavefile_sending
 from ffmpy import FFmpeg
 import socket
 import struct
@@ -12,7 +12,7 @@ import os
 
 import time
 
-from utils import module_communication
+from __utils import module_communication
 
 HOST = ''
 PORT = 5555
@@ -35,37 +35,6 @@ def pcm2wav(path, chennal):
 def handler(clientSocket, addr, communi):
     print("Connected from", addr)
 
-    # f = open('record', 'wb')
-    # # print('ST_PROTO_RECORD_DATA')
-    # buf = clientSocket.recv(1024)
-    # print("buf {} ".format(buf))
-    #
-    # # << File receiving >>
-    # if buf == b'rec':
-    #     start = time.time()
-    #     while True:
-    #         buf = clientSocket.recv(1024)
-    #         if buf[-3:] == b'end':
-    #             # print('ST_PROTO_RECORD_STOP')
-    #             f.write(buf[:-3])
-    #             f.close()
-    #             file_recv_time = time.time() - start
-    #
-    #             # << Pcm to Wave Converter >>
-    #             start = time.time()
-    #             pcm2wav('record')
-    #             os.unlink('record')
-    #             pcm_to_wav_time = time.time() - start
-    #             break
-    #         f.write(buf)
-    #
-    #     # << google STT >>
-    #     RECV_FILE = "record.wav"
-    #     start = time.time()
-    #     result_audio_stt = stt_conn.audio_stt(RECV_FILE)
-    #     stt_time = time.time()-start
-    #     User = result_audio_stt
-
     # << google STT - Streaming>>
     start = time.time()
     result_audio_stt = stt_conn.streaming(communi, clientSocket)
@@ -86,7 +55,6 @@ def handler(clientSocket, addr, communi):
     # << mp3 to Wave Converter >>
     start = time.time()
     SEND_FILE = audio_converter.convert("output_atts.mp3")
-    # SEND_FILE = audio_converter.mono_to_stereo("output_atts.raw")
     convert_time = time.time()-start
 
     start = time.time()
@@ -105,10 +73,7 @@ def handler(clientSocket, addr, communi):
 
     # pcm2wav('1channel_record', '1')
     pcm2wav('2channel_record', '1')
-    #
-    # return {"User": User, "Mubby": Mubby, "file_recv_time": file_recv_time, "pcm_to_wav_time": pcm_to_wav_time,
-    #         "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time,
-    #         "convert_time": convert_time, "file_send_time": file_send_time}
+
     return {"User": User, "Mubby": Mubby, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time,
             "convert_time": convert_time, "file_send_time": file_send_time}
 
@@ -118,8 +83,6 @@ def __print(dic):
     print("{} >> {}".format("User", dic["User"], 2))
     print("{} >> {}".format("Mubby", dic["Mubby"], 2))
     print("{}".format('- - '*10))
-    # print("{} : {}".format("file_recv_time", dic["file_recv_time"], 2))
-    # print("{} : {}".format("pcm_to_wav_time", dic["pcm_to_wav_time"],2))
     print("{} : {}".format("stt_time", dic["stt_time"], 2))
     print("{} : {}".format("aibril_time", dic["aibril_time"], 2))
     print("{} : {}".format("aws_tts_time", dic["aws_tts_time"], 2))
@@ -147,5 +110,7 @@ if __name__ == '__main__':
         # print('\nServer is running {}'.format('-'*5))
         communi = module_communication.Communication()
         clientSocket, addr = serverSocket.accept()
+        clientSocket.settimeout(5)
+        clientSocket.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
         times = handler(clientSocket, addr, communi)
         __print(times)

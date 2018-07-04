@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 
-from utils import aibril_conv_module
-from utils import stt_module
-from utils import tts_module
-from utils import audio_converter
-from utils import wavefile_sending
+from __utils import aibril_conv_module
+from __utils import stt_module
+from __utils import tts_module
+from __utils import audio_converter
+from __utils import wavefile_sending
 from ffmpy import FFmpeg
 import socket
 import struct
@@ -13,7 +13,7 @@ import os
 import time
 from _thread import start_new_thread
 
-from utils import module_communication
+from __utils import module_communication
 addr = 1
 HOST = ''
 PORT = 5555
