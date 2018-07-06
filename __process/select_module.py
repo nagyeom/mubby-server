@@ -6,8 +6,8 @@ from _thread import start_new_thread
 import time
 # file 및 dir 존재 유무를 판단하기 위해서 사용
 # 무삐의 기본 동작에 필요한 함수들이 다 들어가 있다.
-import __function.mubby_processor as mubby
-from __utils.voice_thread import voice_thread
+import __function.default as mubby
+from __utils.voice_thread import client_thread
 
 
 class SocketProcess(multiprocessing.Process):
@@ -27,6 +27,7 @@ class Handler:
         print(" SERVER is running {}".format('-'*10))
 
         # 에이브릴 커넥터, 구글 등 객체 생성은 여기서 하도록 한다.
+        # 커넥팅 되고 난 다음에 class 넣어 저장하도록 해야한다.
 
     def handler(self):
         while self.connection_list:
@@ -46,13 +47,12 @@ class Handler:
                         print("{} >> new client {} connected".format(time.ctime(), client_ip))
 
                         # 사용자 ip를 기준으로 폴더를 생성하는 부분
-                        # 이부분도 함수화 해야하지 않을까 싶다.
                         mubby.make_user_dir(client_ip[0])
 
                     # 커넥션 이후 동작 수행을 위한 함수 호출
                     else:
                         # 구분자에 따라 어떤 thread 를 생성할 것인지 결정 한다.
-                        start_new_thread(voice_thread, (sock,))
+                        start_new_thread(client_thread, (sock,))
                         self.connection_list.remove(sock)
 
             except Exception as e:
