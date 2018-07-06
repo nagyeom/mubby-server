@@ -22,3 +22,9 @@ record\.wav
 output_gtts\.mp3
 
 *.mp3
+
+2channel_record
+
+2channel_record\.wav
+
+output_atts\.raw
