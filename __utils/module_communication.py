@@ -35,6 +35,7 @@ class Communication:
                 answer = self.sock.recv(BUF_SIZE)
             except:
                 self.sock.close()
+                print("close socket")
                 return False
             # print('here_re_answer > {}'.format(answer))
 
