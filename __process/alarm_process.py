@@ -1,28 +1,36 @@
 import multiprocessing
 import select
-from _thread import start_new_thread
-
 # 시간을 나타내기 위해서 사용
 import time
+
+from _thread import start_new_thread
+
 # file 및 dir 존재 유무를 판단하기 위해서 사용
 # 무삐의 기본 동작에 필요한 함수들이 다 들어가 있다.
-import __function.default as mubby
-from __utils.voice_thread import client_thread
+from __configure.client_info import *
+from __function.default import *
+from __utils.action_thread import client_thread
 
 
-class SocketProcess(multiprocessing.Process):
+class AlarmProcess(multiprocessing.Process):
     def __init__(self):
-        super(SocketProcess, self).__init__()
-        self.socket_process = None
+        super(AlarmProcess, self).__init__()
+        self.__alarm_process = None
 
     def run(self):
-        self.socket_process = Handler()
-        self.socket_process.handler()
+        self.__alarm_process = Handler()
+        self.__alarm_process.handler()
+
+
+"""
+    수정해야 한다.
+    알람 전용 프로세스로 -> 서버 송신 전용
+"""
 
 
 class Handler:
     def __init__(self):
-        self.connection_list = [mubby.server.getting_server()]
+        self.connection_list = [server.getting_server()]
 
         print(" SERVER is running {}".format('-'*10))
 
@@ -38,16 +46,27 @@ class Handler:
                 # 이 경우를 실패했을 때는 어떻게 해야하지? 오류를 반환해야하나? 프로그램을 새로 시작해야 하나?
 
                 for sock in read_sock:
-                    # 처음 커넥션을 시도한 부분
+                    # 01. First connect for setting request_socket_from_client
                     if sock == self.connection_list[0]:
-                        # < If select find new client >
                         client, client_ip = self.connection_list[0].accept()
-                        # 원래는 에이브릴을 생성해서 넣어주었다.
+
+                    # 02. Second connect for setting alarm_socket_to_client
+                    if sock == self.connection_list[1]:
+                        client, client_ip = self.connection_list[1].accept()
+
+                        # 02. Comparison a client_serial_number and DB_records
+                        #   - if the same : return primary key
+                        #   - else: insert it than return the primary key
+                        #
+
+                        # 03.
+
+
                         self.connection_list.append(client)
                         print("{} >> new client {} connected".format(time.ctime(), client_ip))
 
                         # 사용자 ip를 기준으로 폴더를 생성하는 부분
-                        mubby.make_user_dir(client_ip[0])
+                        make_user_dir(client_ip[0])
 
                     # 커넥션 이후 동작 수행을 위한 함수 호출
                     else:

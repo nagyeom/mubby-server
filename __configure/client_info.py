@@ -3,19 +3,31 @@ class ClientInfo:
         """
             Client info Class
 
-                1.
-                2.
-                3.
+                1. Default socket checking
+                    - def socket_check(self): bool
 
+                2. self.__client_info Updating
+                    - def update_client_info(self, dict): void
+
+                3. self.__client_info value Getting
+                    - def get_client_info(self): dict
+
+                4. self.__client_info[key] value Setting or Getting
+                    - def __setitem__(self, key, value): void
+                            < using outside > instance_name[key] = value
+
+                    - def __getitem__(self, key): dict[key]
+                            < using outside > instance_name[key]
         """
 
         self.__client_info = dict()
+        """ YOU HAVE TO SET THE FOLLOWING VALUES """
         # """
         #     self.__client_info[request_socket_from_client]
         #     self.__client_info[alarm_socket_to_client]
         #     self.__client_info[stt_text]
         #     self.__client_info[tts_speech]
-        #     self.__client_info[watson_content]
+        #     self.__client_info[watson_context]
         #     self.__client_info[watson_response]
         # """
 
@@ -46,8 +58,8 @@ class ClientInfo:
     def __setitem__(self, key, value):
         self.__client_info[key] = value
 
-    def __getitem__(self, item):
-        return self.__client_info[item]
+    def __getitem__(self, key):
+        return self.__client_info[key]
 
 
 if __name__ == "__main__":

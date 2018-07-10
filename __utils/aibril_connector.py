@@ -1,10 +1,10 @@
-# -*- coding:utf-8 -*-
-from watson_developer_cloud import conversation_v1
 import json
 import os
 
+from watson_developer_cloud import conversation_v1
 
-class WatsonServer:
+
+class WatsonConversation:
     def __init__(self):
         # 환경변수가 설정 안 되어있을 때도 에러를 반환해야한다.
 
@@ -20,11 +20,11 @@ class WatsonServer:
         self.context = {'timezone': 'Asia/Seoul'}
         self.watson_conv_id = ''
         self.conversation = None
-        self.aibril_conv_connect()
+        self.connect()
 
         print("Watson Server make")
 
-    def aibril_conv_connect(self):
+    def connect(self):
         try:
             self.conversation = conversation_v1.ConversationV1(
                 username=self.watson_username,
@@ -44,19 +44,24 @@ class WatsonServer:
             self.watson_conv_id = response['context']['conversation_id']
             self.context['conversation_id'] = self.watson_conv_id
 
+            return self.context
+
         except Exception as e:
             # self.logger.write_critical("cannot connect Aibril conversation server!!!")
             return "에이브릴 대화서버에 접속 할 수 없습니다."
 
-    def aibril_conv(self, text):
-        print("text >> {}".format(text))
+    def conversation(self, client_info):
+        stt_text = client_info['stt_text']
+        context = client_info['watson_context']
+
+        print("stt_text >> {}".format(stt_text))
         if self.watson_conv_id == '':
-            self.aibril_conv_connect()
+            context = self.connect()
 
         response = self.conversation.message(
             workspace_id=self.watson_workspace,
-            message_input={'text': text},
-            context=self.context
+            message_input={'text': stt_text},
+            context=context
         )
 
         print("response >> {}".format(response))
@@ -135,15 +140,3 @@ class WatsonServer:
 
         print("return")
         return header, result_conv, language
-
-
-# aibril_connector.py 만 동작해서 Aibril 대화셋 동작을 확인 할 수 있다.
-if __name__ == "__main__":
-    aibril = WatsonServer()
-    text = '안녕'
-    while True:
-        header, text, language = aibril.aibril_conv(text)
-        print('header >> {}\ntext >> {}\nlanguage >> {}'.format(header, text, language))
-        text = input('\n\t 입력 >> ')
-        if text == '종료':
-            break
