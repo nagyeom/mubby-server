@@ -52,6 +52,8 @@ class Handler:
                     # 커넥션 이후 동작 수행을 위한 함수 호출
                     else:
                         # 구분자에 따라 어떤 thread 를 생성할 것인지 결정 한다.
+
+                        # client data 를 받아와서 넘겨야 한다.
                         start_new_thread(client_thread, (sock,))
                         self.connection_list.remove(sock)
 

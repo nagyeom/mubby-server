@@ -12,7 +12,8 @@ server = socket_module.Socket()
 
 
 def understand_func(input_pcm):
-    text = SpeechToText(input_pcm, 'google')
+    text = SpeechToText.speech_to_text(input_pcm, 'google')
+    print("text : {}".format(type(text)))
     header, text, language = aibril.aibril_conv(text)
 
     return header, text, language
@@ -49,8 +50,5 @@ def pcm2wav(client):
             os.unlink(path)
             break
         input_file.write(data)
-
-    # audio_converter.pcm2wav(path, EXTENSION)
-    # os.unlink(path)
 
     return path+EXTENSION

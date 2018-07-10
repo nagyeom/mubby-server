@@ -11,8 +11,10 @@ import urllib.request
 
 
 class SpeechToText:
-    def __init__(self, file_name, stt_api=None):
+    def __init__(self):
         self.output_stt = ""
+
+    def speech_to_text(self, file_name, stt_api=None):
 
         if stt_api:
             if stt_api == "google":
