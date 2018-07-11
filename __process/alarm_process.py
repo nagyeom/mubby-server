@@ -9,7 +9,7 @@ from _thread import start_new_thread
 # 무삐의 기본 동작에 필요한 함수들이 다 들어가 있다.
 from __configure.client_info import *
 from __function.default import *
-from __utils.action_thread import client_thread
+from __utils.action_thread import action_thread
 
 
 class AlarmProcess(multiprocessing.Process):

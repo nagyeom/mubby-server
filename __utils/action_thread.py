@@ -9,7 +9,7 @@ from __utils.socket_module import SocketAction
 # 각 try 별로 isSuccess 를 달아서 실패하면 더 이상 동작하지 않게 해야할 것 같다.
 # 이하 내용을 client_info = 1 class 형식으로 담아서 주고 받아야 하지 않을까 싶다.
 def action_thread(client_info=None):
-    socket_action = SocketAction()
+    socket_action = SocketAction(client_info)
 
     if client_info:
         try:

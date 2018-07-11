@@ -60,11 +60,3 @@ class ClientInfo:
 
     def __getitem__(self, key):
         return self.__client_info[key]
-
-
-if __name__ == "__main__":
-    diccct = { 'request_socket_from_client': 'request_socket_from_client_test1', 'alarm_socket_to_client': 'alarm_socket_to_client_test1'}
-    c = ClientInfo(diccct)
-    print(c.get_client_info())
-    c['request_socket_from_client'] = 'hi'
-    print(c['request_socket_from_client'])

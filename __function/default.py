@@ -8,7 +8,7 @@ from __configure.mubby_value import *
 from __utils.speech_module import *
 
 __aibril = WatsonConversation()
-__client_socket = SocketAction()
+# __client_socket = SocketAction()
 __stt = SpeechToText()
 __tts = TextToSpeech()
 
@@ -36,21 +36,21 @@ def make_user_dir(client_ip):
         os.system('mkdir __user_audio/' + client_ip)
 
 
-def pcm2wav(client):
-    # print("client.getpeername()[0] >> {}".format(client.getpeername()[0]))
-    path = "__user_audio/"+client.getpeername()[0]+"/input"
-
-    input_file = open(path, 'wb')
-    while True:
-        data = __client_socket.receiving(client)
-        # print("data {}".format(data))
-        if data[-3:] == b'end':
-            print('ST_PROTO_RECORD_STOP')
-            input_file.write(data[:-3])
-            input_file.close()
-            audio_converter.pcm2wav(path, EXTENSION)
-            os.unlink(path)
-            break
-        input_file.write(data)
-
-    return path+EXTENSION
+# def pcm2wav(client):
+#     # print("client.getpeername()[0] >> {}".format(client.getpeername()[0]))
+#     path = "__user_audio/"+client.getpeername()[0]+"/input"
+#
+#     input_file = open(path, 'wb')
+#     while True:
+#         data = __client_socket.receiving(client)
+#         # print("data {}".format(data))
+#         if data[-3:] == b'end':
+#             print('ST_PROTO_RECORD_STOP')
+#             input_file.write(data[:-3])
+#             input_file.close()
+#             audio_converter.pcm2wav(path, EXTENSION)
+#             os.unlink(path)
+#             break
+#         input_file.write(data)
+#
+#     return path+EXTENSION
