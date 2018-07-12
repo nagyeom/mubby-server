@@ -5,7 +5,8 @@ from __utils.socket_module import SocketAction
 from __utils import audio_converter
 
 from __configure.mubby_value import *
-from __utils.speech_module import *
+from __utils.stt_module import SpeechToText
+from __utils.tts_module import TextToSpeech
 
 __aibril = WatsonConversation()
 # __client_socket = SocketAction()
