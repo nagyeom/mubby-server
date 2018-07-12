@@ -10,6 +10,8 @@ from google.cloud.speech import types
 
 import speech_recognition as sr
 
+from __configure.mubby_value import STT_FILE_NAME
+
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
@@ -19,19 +21,23 @@ class SpeechToText:
     def __init__(self):
         pass
 
-    def speech_to_text(self, client_info, stt_api=None):
-        file_name = client_info['stt_file_name']
+    def speech_to_text(self, client_info, stt_api=None, socket_action=None):
+        file_name = client_info['folder_path'] + STT_FILE_NAME
+        stt_text = ''
 
         if stt_api:
             if stt_api == "google":
-                self.google_stt(file_name)
+                stt_text = self.google_stt(file_name)
             elif stt_api == "google_streaming":
-                self.google_stt_streaming(client_info)
+                stt_text = self.google_stt_streaming(socket_action)
             else:
                 print("그런 건 없어 스트리밍 시켜줄게")
-                self.google_stt_streaming(client_info)
+                stt_text = self.google_stt(file_name)
         else:
-            self.google_stt_streaming(client_info)
+            stt_text = self.google_stt(file_name)
+
+        print('stt_text >> {}'.format(stt_text))
+        client_info['stt_text'] = stt_text
 
     def google_stt(self, file_name):
         print("file_name >> {}".format(file_name))
@@ -40,14 +46,15 @@ class SpeechToText:
             r = sr.Recognizer()
             audio = r.record(source)
             try:
-                output_stt = r.recognize_google(audio, show_all=False, language='ko_KR')
+                stt_text = r.recognize_google(audio, show_all=False, language='ko_KR')
                 print("Success Google STT")
             except Exception as e:
                 print("Google STT false >> {}".format(e))
+                stt_text = ''
 
         # print("self.output_stt >> {}".format(output_stt))
 
-        return output_stt
+        return stt_text
 
     @staticmethod
     def listen_print_loop(responses):
@@ -109,8 +116,7 @@ class SpeechToText:
 
         return text
 
-    def google_stt_streaming(self, socket_action, client_info=None):
-        if client_info is not None:
+    def google_stt_streaming(self, socket_action):
             # See http://g.co/cloud/speech/docs/languages
             # for a list of supported languages.
             language_code = 'ko-KR'  # a BCP-47 language tag
@@ -127,14 +133,14 @@ class SpeechToText:
                 config=config,
                 interim_results=True)
             requests = (types.StreamingRecognizeRequest(audio_content=content)
-                        for content in socket_action.get_data(client_record))
+                        for content in socket_action.get_data())
 
             responses = client.streaming_recognize(streaming_config, requests)
 
             # Now, put the transcription responses to use.
-            text = self.listen_print_loop(responses)
-            return text
-
+            stt_text = self.listen_print_loop(responses)
+            # 아무말도 안 하면 어떻게 될까 궁금하네 해보자.
+            return stt_text
 
 
 if __name__ == "__main__":

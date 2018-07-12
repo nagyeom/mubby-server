@@ -31,12 +31,12 @@ class Socket:
 
 class SocketAction:
     def __init__(self, client_info):
-        self.client = client_info['request_socket_from_client']
-        self.audio_path = client_info['tts_speech']
+        self.__client = client_info['request_socket_from_client']
+        self.__audio_path = client_info['folder_path']
 
     def receiving(self):
         # self.client.recv(BUF_SIZE)
-        data = self.client.recv(BUF_SIZE)
+        data = self.__client.recv(BUF_SIZE)
         return data
         # 수신 후 해야 할 동작이 있는 경우 여기다가 작성 한다.
 
@@ -45,8 +45,8 @@ class SocketAction:
         # self.client.send(data)
         # answer = self.client.recv(BUF_SIZE)
 
-        self.client.send(data)
-        answer = self.client.recv(BUF_SIZE)
+        self.__client.send(data)
+        answer = self.__client.recv(BUF_SIZE)
         print('here_re_answer > {}'.format(answer))
 
         if answer == b'ack' or answer == b'spk':
@@ -56,24 +56,24 @@ class SocketAction:
 
     def closing(self):
         try:
-            self.client.close()
+            self.__client.close()
             return True
         except:
             return False
 
-    def sending_wav(self):
-
-        answer = self.client.recv(BUF_SIZE)
+    def sending_wav(self, file_name):
+        audio_path = self.__audio_path + file_name
+        answer = self.__client.recv(BUF_SIZE)
         if answer == b'tel':
-            with open(self.audio_path, "rb") as wave_file:
+            with open(audio_path, "rb") as wave_file:
                 data = wave_file.read()
-                is_success = self.sending(self.client, str(len(data)).encode())
+                is_success = self.sending(self.__client, str(len(data)).encode())
 
             if is_success:
-                with open(self.audio_path, "rb") as wave_file:
+                with open(audio_path, "rb") as wave_file:
                     count = 0
                     data = wave_file.read(FILE_HEADER_SIZE)
-                    if self.sending(self.client, data):
+                    if self.sending(self.__client, data):
                         while True:
                             data = wave_file.read(FILE_READ_SIZE)
                             if len(data) == 0:
@@ -82,5 +82,32 @@ class SocketAction:
                                 count += 1
                                 print('\t- data len >> ', len(data))
                                 print('\t- data count >> ', count)
-                                if not self.sending(self.client, data):
+                                if not self.sending(self.__client, data):
                                     break
+
+    def get_data(self):
+        # 스트레오 그대로 두고 32000으로 보내면 된다.
+        # 파일형식으로 넘길 때는 2채널 스트레오를 모노로 변경해주어야 했는데
+        # 다이렉트로 전송은 왠일인지 스트레오로 인식하지 않는다.
+        # f1 = open('1channel_record', 'wb')
+        f2 = open('2channel_record', 'wb')
+        data = self.__client.recv(BUF_SIZE)
+        print("len >> {}".format(len(data[3:])))
+        print("rec check >> {}".format(data[:3]))
+        if data[:3] == b'rec':
+            if len(data) > 3:
+                f2.write(data[3:])
+                yield data[3:]
+            print("go to while")
+            while True:
+                data = self.__client.recv(BUF_SIZE)
+                print("data type >> {}".format(type(data)))
+                print("len >> {}".format(len(data)))
+                if data[-3:] == b'end':
+                    if len(data) > 3:
+                        f2.write(data[:-3])
+                        yield data[:-3]
+                    f2.close()
+                    break
+                f2.write(data)
+                yield data

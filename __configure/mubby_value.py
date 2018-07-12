@@ -3,7 +3,7 @@ CLIENT = {
     'request_socket_from_client': '',
     'alarm_socket_to_client': '',
     'stt_text': '',
-    'tts_speech': '',
+    'folder_path': '',
     'watson_content': '',
     'watson_response': '',
 }
@@ -12,7 +12,10 @@ CLIENT = {
 CLIENT_LIST = dict()
 
 # Audio
-EXTENSION = ".wav"
+# EXTENSION = ".wav"
+STT_FILE_NAME = "input_speech.mp3"
+TTS_FILE_NAME = "output_speech.mp3"
+RESPONSE_FILE_NAME = "output_speech.wav"
 
 # Network
 HOST = ''

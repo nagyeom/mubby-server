@@ -14,8 +14,11 @@ __stt = SpeechToText()
 __tts = TextToSpeech()
 
 
-def understand_func(client_info):
-    __stt.speech_to_text(client_info, 'google_streaming')
+def understand_func(client_info, socket_action=None):
+    if socket_action:
+        __stt.speech_to_text(client_info, 'google_streaming', socket_action)
+    else:
+        __stt.speech_to_text(client_info, 'google')
     print("text : {}".format(type(client_info['stt_text'] )))
     header, text, language = __aibril.conversation(client_info)
 
@@ -23,12 +26,11 @@ def understand_func(client_info):
 
 
 def response_func(client_info):
-    speech_path = "__user_audio/" + client_info['request_socket_from_client'].getpeername()[0] \
-                  + "/convert_audio" + EXTENSION
+    speech_path = client_info['folder_path'] + RESPONSE_FILE_NAME
 
     # 파일 위치 다시 확인 할 것.
     speech_file_name = __tts.text_to_speech(client_info, 'aws_polly')
-    client_info['tts_speech'] = audio_converter.convert(speech_file_name, speech_path)
+    audio_converter.convert(speech_file_name, speech_path)
 
 
 def make_user_dir(client_ip):

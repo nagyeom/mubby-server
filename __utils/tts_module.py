@@ -5,6 +5,8 @@ import urllib.request
 from boto3 import client
 from gtts import gTTS
 
+from __configure.mubby_value import TTS_FILE_NAME
+
 
 # 어떻게 동작하는지 확인할 것
 class TextToSpeech:
@@ -12,31 +14,31 @@ class TextToSpeech:
         pass
 
     def text_to_speech(self, client_info, tts_api=None):
-        output_tts = "output_tts.mp3"
+        tts_speech = client_info['tts_speech'] + TTS_FILE_NAME
         text = client_info['watson_response']
 
         if tts_api:
             if tts_api == "google":
-                self.google_tts(text, output_tts)
+                self.google_tts(text, tts_speech)
             elif tts_api == "naver_clova":
-                self.naver_tts(text, output_tts)
+                self.naver_tts(text, tts_speech)
             elif tts_api == "aws_polly":
-                self.aws_tts(text, output_tts)
+                self.aws_tts(text, tts_speech)
             else:
                 print("그런 건 없어 폴리 시켜줄게")
-                self.aws_tts(text, output_tts)
+                self.aws_tts(text, tts_speech)
         else:
-            self.aws_tts(text)
+            self.aws_tts(text, tts_speech)
 
-    def google_tts(self, text, output_tts):
+    @staticmethod
+    def google_tts(text, tts_speech):
         language = 'ko'
         rec_tts = gTTS(text=text, lang=language, slow=False)
         print("Saving gTTS mp3")
-        rec_tts.save(output_tts)
+        rec_tts.save(tts_speech)
 
-        return output_tts
-
-    def naver_tts(self, text, output_tts):
+    @staticmethod
+    def naver_tts(text, tts_speech):
         client_id = os.getenv('naver_tts_client_id')
         client_secret = os.getenv('naver_tts_client_secret')
         encText = urllib.parse.quote(text)
@@ -52,14 +54,13 @@ class TextToSpeech:
         if rescode == 200:
             print("Saving Naver-Clova TTS mp3")
             response_body = response.read()
-            with open(output_tts, 'wb') as f:
+            with open(tts_speech, 'wb') as f:
                 f.write(response_body)
         else:
             print("Error Code:" + rescode)
 
-        return output_tts
-
-    def aws_tts(self, text, output_tts):
+    @staticmethod
+    def aws_tts(text, tts_speech):
         polly = client("polly", region_name="ap-northeast-2")
 
         response = polly.synthesize_speech(
@@ -69,9 +70,7 @@ class TextToSpeech:
 
         stream = response.get("AudioStream")
 
-        with open(output_tts, 'wb') as f:
+        with open(tts_speech, 'wb') as f:
             data = stream.read()
             f.write(data)
         print("Saving AWS-Polly TTS mp3")
-
-        return output_tts

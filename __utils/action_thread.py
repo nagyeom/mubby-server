@@ -2,6 +2,7 @@ from __function.default import *
 from __function.music import *
 from __function.weather import *
 
+from __configure.mubby_value import RESPONSE_FILE_NAME
 from __utils.socket_module import SocketAction
 
 
@@ -14,7 +15,7 @@ def action_thread(client_info=None):
     if client_info:
         try:
             # 01. STT Streaming
-            header, text, language = understand_func(client_info)
+            header, text, language = understand_func(client_info, socket_action)
             print("header >> {}\ntext >> {}\nlanguage >> {}".format(header, text, language))
         except Exception as e:
             print('\t★ default function error >> {}'.format(e))
@@ -25,7 +26,7 @@ def action_thread(client_info=None):
 
             if header['command'] == "chat":
                 # tts 에 다녀온다.
-                client_info['tts_speech'] = response_func(client_info)
+                response_func(client_info)
 
             elif header['command'] == "weather":
                 # aibril 과 대화를 한 번 더 하고 tts 에 다녀온다.
@@ -46,8 +47,8 @@ def action_thread(client_info=None):
             # < The server sent data to client_info >
             # 음성 파일을 돌려주어야 한다. (확인)
             # output_audio_path = "__user_audio/"+sock.getpeername()[0] + "/output_tts.wav"
-            print("out_audio_path >> {}".format(client_info['tts_speech']))
-            socket_action.sending_wav()
+            print("out_audio_path >> {}".format(client_info['folder_path'] + RESPONSE_FILE_NAME))
+            socket_action.sending_wav(RESPONSE_FILE_NAME)
         except Exception as e:
             print('\t★ __send function error >> {}'.format(e))
 

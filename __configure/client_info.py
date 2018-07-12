@@ -26,7 +26,7 @@ class ClientInfo:
         #     self.__client_info[request_socket_from_client]
         #     self.__client_info[alarm_socket_to_client]
         #     self.__client_info[stt_text]
-        #     self.__client_info[tts_speech]
+        #     self.__client_info[folder_path]
         #     self.__client_info[watson_context]
         #     self.__client_info[watson_response]
         # """

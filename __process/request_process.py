@@ -47,6 +47,7 @@ class Handler:
                     primary_key = 0
                     #       >> Add a new client_info at CLIENT_LIST
                     client_info['request_socket_from_client'] = request_socket_from_client
+                    client_info['folder_path'] = "__user_audio/" + client_ip[0] + "/"
                     # 방 주소를 ip로 하지 않고 primary key로 생성해야 할 것 같다.
                     make_user_dir(client_ip[0])
                     print('client ip > {}'.format(client_ip[0]))
