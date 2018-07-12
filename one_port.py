@@ -92,6 +92,15 @@ def __print(dic):
 
 
 if __name__ == '__main__':
+
+    try:
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+    except:
+        print('\nPlease set GOOGLE_APPLICATION_CREDENTIALS')
+        print('{}'.format('- ' * 30))
+        print('  $ export GOOGLE_APPLICATION_CREDENTIALS=[json PATH]')
+        print('{}'.format('- ' * 30))
+        exit(1)
     # pcm2wav('1channel_record', '1')
     # pcm2wav('2channel_record', '2')
     # pcm2wav('2channel_stereo.raw')

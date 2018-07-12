@@ -142,6 +142,8 @@ if __name__ == '__main__':
     while True:
         communi = module_communication.Communication()
         client_recoder, addr = server_recoder.accept()
+        print("recoder >> {}".format(addr))
         client_speaker, addr = server_speaker.accept()
+        print("speaker >> {}".format(addr))
         times = handler(client_recoder, client_speaker, str(addr[0]), communi)
         __print(times)
