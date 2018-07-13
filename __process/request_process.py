@@ -47,11 +47,11 @@ class Handler:
                     primary_key = 0
                     #       >> Add a new client_info at CLIENT_LIST
                     client_info['request_socket_from_client'] = request_socket_from_client
-                    client_info['folder_path'] = "__user_audio/" + client_ip[0] + "/"
+                    client_info['folder_path'] = "__user_audio/" + "{}".format(client_ip[1]) + "/"
                     # 방 주소를 ip로 하지 않고 primary key로 생성해야 할 것 같다.
-                    make_user_dir(client_ip[0])
-                    print('client ip > {}'.format(client_ip[0]))
-                    print('client_info ip > {}'.format(client_info['request_socket_from_client'].getpeername()[0]))
+                    make_user_dir(client_ip[1])
+                    print('client ip > {}'.format(client_ip[1]))
+                    print('client_info ip > {}'.format(client_info['request_socket_from_client'].getpeername()[1]))
 
                     CLIENT_LIST[primary_key] = ClientInfo(client_info)
                 #   - else: insert it than return the primary key

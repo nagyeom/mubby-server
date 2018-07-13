@@ -22,6 +22,8 @@ class WatsonConversation:
         self.conversation = None
         self.connect()
 
+        print("self.conversation{} ".format(self.conversation))
+
         print("Watson Server make")
 
     def connect(self):
@@ -44,6 +46,8 @@ class WatsonConversation:
             self.watson_conv_id = response['context']['conversation_id']
             self.context['conversation_id'] = self.watson_conv_id
 
+            print('self.context >> {}'.format(self.context))
+
             return self.context
 
         except Exception as e:
@@ -51,8 +55,12 @@ class WatsonConversation:
             return "에이브릴 대화서버에 접속 할 수 없습니다."
 
     def conversation(self, client_info):
+        print('conversation')
         stt_text = client_info['stt_text']
         context = client_info['watson_context']
+
+        if context['conversation_id']:
+            context['conversation_id'] = self.watson_conv_id
 
         print("stt_text >> {}".format(stt_text))
         if self.watson_conv_id == '':
@@ -140,3 +148,16 @@ class WatsonConversation:
 
         print("return")
         return header, result_conv, language
+
+if __name__ == "__main__":
+    CLIENT = {
+        'request_socket_from_client': '',
+        'alarm_socket_to_client': '',
+        'stt_text': '',
+        'folder_path': '',
+        'watson_content': {'timezone': 'Asia/Seoul'},
+        'watson_response': '',
+    }
+
+    a = WatsonConversation()
+    a.conversation(CLIENT)

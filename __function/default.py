@@ -9,7 +9,6 @@ from __utils.stt_module import SpeechToText
 from __utils.tts_module import TextToSpeech
 
 __aibril = WatsonConversation()
-# __client_socket = SocketAction()
 __stt = SpeechToText()
 __tts = TextToSpeech()
 
@@ -19,7 +18,8 @@ def understand_func(client_info, socket_action=None):
         __stt.speech_to_text(client_info, 'google_streaming', socket_action)
     else:
         __stt.speech_to_text(client_info, 'google')
-    print("text : {}".format(type(client_info['stt_text'] )))
+
+    print("text : {}".format(client_info['stt_text']))
     header, text, language = __aibril.conversation(client_info)
 
     return header, text, language
@@ -34,9 +34,9 @@ def response_func(client_info):
 
 
 def make_user_dir(client_ip):
-    if not os.path.exists('__user_audio/' + client_ip):
+    if not os.path.exists('__user_audio/{}'.format(client_ip)):
         print('\tmake "{}" dir'.format(client_ip))
-        os.system('mkdir __user_audio/' + client_ip)
+        os.system('mkdir __user_audio/{}'.format(client_ip))
 
 
 # def pcm2wav(client):

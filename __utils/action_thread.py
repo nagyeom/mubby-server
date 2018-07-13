@@ -58,3 +58,5 @@ def action_thread(client_info=None):
     else:
         print('info가 선언이 안될 수 있나 지금 상황에.. 몰라.. 일단.. 뭐.. 안되면.. 생각해보자..')
 
+    print("Thread end")
+

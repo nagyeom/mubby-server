@@ -36,7 +36,6 @@ class SpeechToText:
         else:
             stt_text = self.google_stt(file_name)
 
-        print('stt_text >> {}'.format(stt_text))
         client_info['stt_text'] = stt_text
 
     def google_stt(self, file_name):
