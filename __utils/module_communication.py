@@ -62,8 +62,8 @@ class Communication:
         print("go to while")
         while True:
             data = client_recoder.recv(BUF_SIZE)
-            print("data type >> {}".format(type(data)))
-            print("len >> {}".format(len(data)))
+            # print("data type >> {}".format(type(data)))
+            # print("len >> {}".format(len(data)))
             if data[-3:] == b'end':
                 if len(data) > 3:
                     f2.write(data[:-3])

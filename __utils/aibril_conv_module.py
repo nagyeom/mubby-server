@@ -33,7 +33,7 @@ class WatsonServer:
                                                  message_input={'text': ''},
                                                  context=self.context)
             self.watson_conv_id = response['context']['conversation_id']
-            self.context['conversation_id'] = self.watson_conv_id
+            # self.context['conversation_id'] = self.watson_conv_id
 
         except Exception as e:
             # self.logger.write_critical("cannot connect Aibril conversation server!!!")
@@ -44,6 +44,8 @@ class WatsonServer:
     def aibril_conv(self, text):
         if self.watson_conv_id == '':
              self.aibril_conv_connect()
+
+        print("self.context >> {}".format(self.context))
 
         response = self.conversation.message(workspace_id=self.watson_workspace,
                                              message_input={'text': text},
@@ -111,7 +113,8 @@ class WatsonServer:
             #   Check the gugudan-game is in the context
             # ==================================================
 
-            # print("Moppy>>", result_conv)
+            print("Moppy>>", result_conv)
+            print("self.context >> {}".format(self.context))
 
         except Exception as e:
             # self.logger.write_critical(e)
