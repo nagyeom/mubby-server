@@ -47,11 +47,13 @@ class SocketAction:
 
         self.__client.send(data)
         answer = self.__client.recv(BUF_SIZE)
-        print('here_re_answer > {}'.format(answer))
+        # print('here_re_answer > {}'.format(answer))
 
         if answer == b'ack' or answer == b'spk':
             return True
         else:
+            print('send end')
+            self.__client.send(b'end')
             return False
 
     def closing(self):
@@ -67,22 +69,23 @@ class SocketAction:
         if answer == b'tel':
             with open(audio_path, "rb") as wave_file:
                 data = wave_file.read()
-                is_success = self.sending(self.__client, str(len(data)).encode())
+                is_success = self.sending(str(len(data)).encode())
 
             if is_success:
                 with open(audio_path, "rb") as wave_file:
                     count = 0
                     data = wave_file.read(FILE_HEADER_SIZE)
-                    if self.sending(self.__client, data):
+                    if self.sending(data):
                         while True:
                             data = wave_file.read(FILE_READ_SIZE)
                             if len(data) == 0:
+                                self.sending(b'end')
                                 break
                             else:
                                 count += 1
-                                print('\t- data len >> ', len(data))
-                                print('\t- data count >> ', count)
-                                if not self.sending(self.__client, data):
+                                # print('\t- data len >> ', len(data))
+                                # print('\t- data count >> ', count)
+                                if not self.sending(data):
                                     break
 
     def get_data(self):

@@ -44,7 +44,7 @@ class Handler:
                 exist_in_a_db = False
                 if not exist_in_a_db:
                     #       >> Add client information at DB
-                    primary_key = 0
+                    primary_key = client_ip[1]
                     #       >> Add a new client_info at CLIENT_LIST
                     client_info['request_socket_from_client'] = request_socket_from_client
                     client_info['folder_path'] = "__user_audio/" + "{}".format(client_ip[1]) + "/"
@@ -70,3 +70,5 @@ class Handler:
                 pass
                 # HAVE TO SAVE A CLIENT_LIST VALUE
                 # YOU CAN USE A "PICKLE" MODULE
+
+            print("Client LIST {} \n{}\n\n".format('- '*10, CLIENT_LIST))

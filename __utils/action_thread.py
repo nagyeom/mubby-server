@@ -1,3 +1,5 @@
+import time
+
 from __function.default import *
 from __function.music import *
 from __function.weather import *
@@ -12,11 +14,12 @@ from __utils.socket_module import SocketAction
 def action_thread(client_info=None):
     socket_action = SocketAction(client_info)
 
+    # while client_info['request_socket_from_client']:
     if client_info:
         try:
             # 01. STT Streaming
-            header, text, language = understand_func(client_info, socket_action)
-            print("header >> {}\ntext >> {}\nlanguage >> {}".format(header, text, language))
+            header, language = understand_func(client_info, socket_action)
+            print("header >> {}\nlanguage >> {}".format(header, language))
         except Exception as e:
             print('\t★ default function error >> {}'.format(e))
 

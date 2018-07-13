@@ -20,14 +20,15 @@ def understand_func(client_info, socket_action=None):
         __stt.speech_to_text(client_info, 'google')
 
     print("text : {}".format(client_info['stt_text']))
-    header, text, language = __aibril.conversation(client_info)
 
-    return header, text, language
+    print("__aibril {}".format(type(__aibril)))
+    header, language = __aibril.conversation(client_info)
+
+    return header, language
 
 
 def response_func(client_info):
     speech_path = client_info['folder_path'] + RESPONSE_FILE_NAME
-
     # 파일 위치 다시 확인 할 것.
     speech_file_name = __tts.text_to_speech(client_info, 'aws_polly')
     audio_converter.convert(speech_file_name, speech_path)

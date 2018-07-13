@@ -14,8 +14,9 @@ class TextToSpeech:
         pass
 
     def text_to_speech(self, client_info, tts_api=None):
-        tts_speech = client_info['tts_speech'] + TTS_FILE_NAME
+        tts_speech = client_info['folder_path'] + TTS_FILE_NAME
         text = client_info['watson_response']
+        print('watson_response {} '.format(text))
 
         if tts_api:
             if tts_api == "google":
@@ -29,6 +30,8 @@ class TextToSpeech:
                 self.aws_tts(text, tts_speech)
         else:
             self.aws_tts(text, tts_speech)
+
+        return tts_speech
 
     @staticmethod
     def google_tts(text, tts_speech):

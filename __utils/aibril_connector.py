@@ -11,68 +11,55 @@ class WatsonConversation:
         # client 마다 객체에 context 를 넣었다가 호출해야하는 것은 아닐까?
         # 대화가 이어지기 위해서는 이전의 context 값이 필요하다.
         # Aibril 에 접근하기 위해서는 watson id 가 필요하다.
-        self.watson_username = os.getenv('watson_username')
-        self.watson_password = os.getenv('watson_password')
-        self.watson_workspace = os.getenv('watson_workspace')
-        self.watson_url = os.getenv('watson_url')
-        self.watson_version = os.getenv('watson_version')
+        self.__watson_username = os.getenv('watson_username')
+        self.__watson_password = os.getenv('watson_password')
+        self.__watson_workspace = os.getenv('watson_workspace')
+        self.__watson_url = os.getenv('watson_url')
+        self.__watson_version = os.getenv('watson_version')
 
-        self.context = {'timezone': 'Asia/Seoul'}
-        self.watson_conv_id = ''
-        self.conversation = None
+        self.__context = {'timezone': 'Asia/Seoul'}
+        self.__watson_conv_id = ''
+        self.__convert = None
         self.connect()
-
-        print("self.conversation{} ".format(self.conversation))
 
         print("Watson Server make")
 
     def connect(self):
         try:
-            self.conversation = conversation_v1.ConversationV1(
-                username=self.watson_username,
-                password=self.watson_password,
-                version=self.watson_version,
-                url=self.watson_url
+            self.__convert = conversation_v1.ConversationV1(
+                username=self.__watson_username,
+                password=self.__watson_password,
+                version=self.__watson_version,
+                url=self.__watson_url
             )
 
             # response 함수 화 할 것 그 이후 동작도 함수화 해서 분리할 것.
-            response = self.conversation.message(
-                workspace_id=self.watson_workspace,
+            response = self.__convert.message(
+                workspace_id=self.__watson_workspace,
                 # message_input 을 여기다 안 해줘도 상관없지 않나?
                 # context 도 connection 부분에서는 사용하는게 현재로는 없어 보인다.
                 message_input={'text': ''},
-                context=self.context
+                context=self.__context
             )
-            self.watson_conv_id = response['context']['conversation_id']
-            self.context['conversation_id'] = self.watson_conv_id
-
-            print('self.context >> {}'.format(self.context))
-
-            return self.context
+            self.__watson_conv_id = response['context']['conversation_id']
+            # self.__context['conversation_id'] = self.__watson_conv_id
 
         except Exception as e:
-            # self.logger.write_critical("cannot connect Aibril conversation server!!!")
-            return "에이브릴 대화서버에 접속 할 수 없습니다."
+            print("cannot connect Aibril conversation server!!!")
+            # return "에이브릴 대화서버에 접속 할 수 없습니다."
 
     def conversation(self, client_info):
-        print('conversation')
         stt_text = client_info['stt_text']
         context = client_info['watson_context']
 
-        if context['conversation_id']:
-            context['conversation_id'] = self.watson_conv_id
+        if self.__watson_conv_id == '':
+            self.connect()
 
-        print("stt_text >> {}".format(stt_text))
-        if self.watson_conv_id == '':
-            context = self.connect()
-
-        response = self.conversation.message(
-            workspace_id=self.watson_workspace,
+        response = self.__convert.message(
+            workspace_id=self.__watson_workspace,
             message_input={'text': stt_text},
             context=context
         )
-
-        print("response >> {}".format(response))
 
         # response type 출력 해볼 것, json parsing 이 딱히 필요 없을 수도
         json_response = json.dumps(response, indent=2, ensure_ascii=False)
@@ -103,7 +90,7 @@ class WatsonConversation:
 
         try:
             header = dict_response['output']['header']
-            print('header type {}'.format(type(header)))
+            # print('header type {}'.format(type(header)))
         except Exception as e:
             header = {"command": "chat"}
             print("It dosen't have Header >> {}".format(e))
@@ -114,10 +101,10 @@ class WatsonConversation:
             # 딕셔너리 value 안에 리스트 혹은 딕셔너리로 사용.
             # 사용 후에 value 삭제 후  update.
             # ==================================================
-            self.context.update(dict_response['context'])
+            context.update(dict_response['context'])
 
             # test 용
-            # self.context["dir"] = {"aa":"I_am_Leni", "bb":"2"}
+            # self.__context["dir"] = {"aa":"I_am_Leni", "bb":"2"}
 
             # ==================================================
             #   Check conversation is end or durable
@@ -146,18 +133,5 @@ class WatsonConversation:
             language = 'ko'
         # --------------------------------------------------
 
-        print("return")
-        return header, result_conv, language
-
-if __name__ == "__main__":
-    CLIENT = {
-        'request_socket_from_client': '',
-        'alarm_socket_to_client': '',
-        'stt_text': '',
-        'folder_path': '',
-        'watson_content': {'timezone': 'Asia/Seoul'},
-        'watson_response': '',
-    }
-
-    a = WatsonConversation()
-    a.conversation(CLIENT)
+        client_info['watson_response'] = result_conv
+        return header, language

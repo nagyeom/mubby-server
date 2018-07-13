@@ -4,7 +4,7 @@ CLIENT = {
     'alarm_socket_to_client': '',
     'stt_text': '',
     'folder_path': '',
-    'watson_content': {'timezone': 'Asia/Seoul'},
+    'watson_context': {'timezone': 'Asia/Seoul'},
     'watson_response': '',
 }
 
