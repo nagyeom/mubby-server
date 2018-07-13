@@ -20,9 +20,6 @@ class WatsonConversation:
         self.__context = {'timezone': 'Asia/Seoul'}
         self.__watson_conv_id = ''
         self.__convert = None
-        self.connect()
-
-        print("Watson Server make")
 
     def connect(self):
         try:
@@ -101,18 +98,18 @@ class WatsonConversation:
             # 딕셔너리 value 안에 리스트 혹은 딕셔너리로 사용.
             # 사용 후에 value 삭제 후  update.
             # ==================================================
-            context.update(dict_response['context'])
+        context.update(dict_response['context'])
 
-            # test 용
-            # self.__context["dir"] = {"aa":"I_am_Leni", "bb":"2"}
+        # test 용
+        # self.__context["dir"] = {"aa":"I_am_Leni", "bb":"2"}
 
-            # ==================================================
-            #   Check conversation is end or durable
-            # ==================================================
-            if 'branch_exited' in dict_response['context']['system']:
-                conv_flag = True
-            else:
-                conv_flag = False
+        # ==================================================
+        #   Check conversation is end or durable
+        # ==================================================
+        if 'branch_exited' in dict_response['context']['system']:
+            conv_flag = True
+        else:
+            conv_flag = False
 
             # --------------------------------------------------
             #   << Check Translate >>

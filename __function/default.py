@@ -19,9 +19,6 @@ def understand_func(client_info, socket_action=None):
     else:
         __stt.speech_to_text(client_info, 'google')
 
-    print("text : {}".format(client_info['stt_text']))
-
-    print("__aibril {}".format(type(__aibril)))
     header, language = __aibril.conversation(client_info)
 
     return header, language

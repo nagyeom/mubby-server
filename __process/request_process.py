@@ -1,3 +1,4 @@
+import copy
 import multiprocessing
 # 시간을 나타내기 위해서 사용
 
@@ -29,10 +30,11 @@ class Handler:
         self.handler()
 
     def handler(self):
+        primary_key = 1
+
         while self.__request_socket:
             # 00. Initialize a client_info
-            client_info = CLIENT.copy()
-            primary_key = None
+            client_info = copy.deepcopy(CLIENT)
             # 로그로 수정해야하는 부분
             print("-")
             try:
@@ -44,20 +46,28 @@ class Handler:
                 exist_in_a_db = False
                 if not exist_in_a_db:
                     #       >> Add client information at DB
-                    primary_key = client_ip[1]
-                    #       >> Add a new client_info at CLIENT_LIST
-                    client_info['request_socket_from_client'] = request_socket_from_client
-                    client_info['folder_path'] = "__user_audio/" + "{}".format(client_ip[1]) + "/"
-                    # 방 주소를 ip로 하지 않고 primary key로 생성해야 할 것 같다.
-                    make_user_dir(client_ip[1])
-                    print('client ip > {}'.format(client_ip[1]))
-                    print('client_info ip > {}'.format(client_info['request_socket_from_client'].getpeername()[1]))
+                    if primary_key == 1:
+                        primary_key = 0
+                    else:
+                        primary_key = 1
 
-                    CLIENT_LIST[primary_key] = ClientInfo(client_info)
-                #   - else: insert it than return the primary key
-                else:
-                    primary_key = exist_in_a_db
-                    CLIENT_LIST[primary_key]['request_socket_from_client'] = request_socket_from_client
+                    if primary_key not in CLIENT_LIST:
+                        #       >> Add a new client_info at CLIENT_LIST
+                        client_info['request_socket_from_client'] = request_socket_from_client
+                        client_info['folder_path'] = "__user_audio/" + "{}".format(primary_key) + "/"
+                        # 방 주소를 ip로 하지 않고 primary key로 생성해야 할 것 같다.
+                        make_user_dir(primary_key)
+                        # print('client ip > {}'.format(primary_key))
+                        # print('client_info ip > {}'.format(client_info['request_socket_from_client'].getpeername()[1]))
+
+                        CLIENT_LIST[primary_key] = client_info
+                    #   - else: insert it than return the primary key
+                    else:
+                        CLIENT_LIST[primary_key]['request_socket_from_client'] = request_socket_from_client
+
+                # else:
+                #     primary_key = exist_in_a_db
+                #     CLIENT_LIST[primary_key]['request_socket_from_client'] = request_socket_from_client
 
                 # 03. Start thread
                 start_new_thread(action_thread, (CLIENT_LIST[primary_key],))
@@ -69,6 +79,4 @@ class Handler:
             finally:
                 pass
                 # HAVE TO SAVE A CLIENT_LIST VALUE
-                # YOU CAN USE A "PICKLE" MODULE
-
-            print("Client LIST {} \n{}\n\n".format('- '*10, CLIENT_LIST))
+                # YOU CAN USE A "PICKLE" MODULE#
