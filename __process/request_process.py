@@ -6,7 +6,6 @@ from _thread import start_new_thread
 
 # file 및 dir 존재 유무를 판단하기 위해서 사용
 # 무삐의 기본 동작에 필요한 함수들이 다 들어가 있다.
-from __configure.client_info import *
 from __configure.mubby_value import CLIENT, CLIENT_LIST, REQUEST_ADDR
 from __function.default import *
 from __utils.socket_module import Socket

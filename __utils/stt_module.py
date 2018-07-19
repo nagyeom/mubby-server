@@ -140,10 +140,3 @@ class SpeechToText:
             stt_text = self.listen_print_loop(responses)
             # 아무말도 안 하면 어떻게 될까 궁금하네 해보자.
             return stt_text
-
-
-if __name__ == "__main__":
-    name = "../__user_audio/192.168.0.1/record.wav"
-    s = SpeechToText()
-    a = s.google_stt(name)
-
