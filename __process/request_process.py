@@ -4,8 +4,6 @@ import multiprocessing
 
 from _thread import start_new_thread
 
-# file 및 dir 존재 유무를 판단하기 위해서 사용
-# 무삐의 기본 동작에 필요한 함수들이 다 들어가 있다.
 from __configure.mubby_value import CLIENT, CLIENT_LIST, REQUEST_ADDR
 from __function.default import *
 from __utils.socket_module import Socket
@@ -63,10 +61,6 @@ class Handler:
                     #   - else: insert it than return the primary key
                     else:
                         CLIENT_LIST[primary_key]['request_socket_from_client'] = request_socket_from_client
-
-                # else:
-                #     primary_key = exist_in_a_db
-                #     CLIENT_LIST[primary_key]['request_socket_from_client'] = request_socket_from_client
 
                 # 03. Start thread
                 start_new_thread(action_thread, (CLIENT_LIST[primary_key],))

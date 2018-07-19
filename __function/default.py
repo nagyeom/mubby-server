@@ -1,7 +1,6 @@
 import os
 
 from __utils.aibril_connector import WatsonConversation
-from __utils.socket_module import SocketAction
 from __utils import audio_converter
 
 from __configure.mubby_value import *
