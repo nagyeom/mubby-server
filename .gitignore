@@ -24,3 +24,13 @@ record\.wav
 *.wav
 
 output_atts\.mp3
+
+__utils/output_gcltts\.mp3
+
+output_atts\.raw
+
+2channel_record
+
+__configure/__pycache__/
+
+__function/__pycache__/
