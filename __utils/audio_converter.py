@@ -25,8 +25,6 @@ def mono_to_stereo(data, width=1):
 
 
 def stereo_to_mono(data, width=2):
-    # 2채널 스트레오를 모노로 바꾸는 함수
-    # 1채널 모노 파일을 사용할 때는 사용하시지 않아도 됩니다.
     lsample = audioop.tomono(data, width, 1, 0)
     rsample = audioop.tomono(data, width, 0, 1)
     return audioop.add(lsample, rsample, width)
