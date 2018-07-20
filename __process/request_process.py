@@ -37,6 +37,7 @@ class Handler:
             try:
                 # 01. First connect for setting request_socket_from_client
                 request_socket_from_client, client_ip = self.__request_socket.accept()
+                Socket.setting_socket_option(request_socket_from_client)
 
                 # 02. Comparison a client_serial_number and DB_records
                 #   - if the same : return primary key

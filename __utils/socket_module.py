@@ -1,4 +1,5 @@
 import socket
+import struct
 
 from __configure.mubby_value import BUF_SIZE, FILE_HEADER_SIZE, FILE_READ_SIZE
 
@@ -19,6 +20,11 @@ class Socket:
     #
     # def setting_sock(self, client):
     #     self.client = client
+
+    @staticmethod
+    def setting_socket_option(client):
+        client.settimeout(5)
+        client.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
 
 
 class SocketAction:
