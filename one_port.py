@@ -37,19 +37,28 @@ def handler(clientSocket, addr, communi):
 
     # << google STT - Streaming>>
     start = time.time()
-    result_audio_stt = stt_conn.streaming(communi, clientSocket)
+    try:
+        result_audio_stt = stt_conn.streaming(communi, clientSocket)
+    except:
+        result_audio_stt = ''
     stt_time = time.time()-start
     User = result_audio_stt
 
     # << Aibril conversation >>
     start = time.time()
-    result_conversation = aibril_conn.aibril_conv(result_audio_stt)
+    try:
+        result_conversation = aibril_conn.aibril_conv(result_audio_stt)
+    except:
+        result_conversation = '다시 말씀해 주시면 좋겠어요'
     aibril_time = time.time()-start
     Mubby = result_conversation
 
     # << awsPolly TTS >>
     start = time.time()
-    tts_conn.aws_tts(result_conversation)
+    try:
+        tts_conn.aws_tts(result_conversation)
+    except:
+        print('다시말씀해주시면 좋겠어요 보이스 파일을 넘겨야 할 것 같은데 보이스 파일이 없네요 ㅠ')
     aws_tts_time = time.time()-start
 
     # << mp3 to Wave Converter >>
@@ -61,18 +70,23 @@ def handler(clientSocket, addr, communi):
     with open(SEND_FILE, 'rb') as f:
         data = f.read()
     print("size >> {}".format(len(data)))
-    answer = clientSocket.recv(1024)
-    if answer == b'tel':
-        clientSocket.send(str(len(data)).encode())
-        a = clientSocket.recv(1024)
-        # print("recv{}".format(a))
-        communi.sending_wav(clientSocket, SEND_FILE)
-        what = clientSocket.recv(1024)
-        file_send_time = time.time()-start
+    try:
+        answer = clientSocket.recv(1024)
+        if answer == b'tel':
+            clientSocket.send(str(len(data)).encode())
+            a = clientSocket.recv(1024)
+            # print("recv{}".format(a))
+            communi.sending_wav(clientSocket, SEND_FILE)
+            what = clientSocket.recv(1024)
+            file_send_time = time.time()-start
+            clientSocket.close()
+
+        # pcm2wav('1channel_record', '1')
+        pcm2wav('2channel_record', '1')
+    except:
+        file_send_time = 0
         clientSocket.close()
 
-    # pcm2wav('1channel_record', '1')
-    pcm2wav('2channel_record', '1')
 
     return {"User": User, "Mubby": Mubby, "stt_time": stt_time, "aibril_time": aibril_time, "aws_tts_time": aws_tts_time,
             "convert_time": convert_time, "file_send_time": file_send_time}
@@ -119,7 +133,7 @@ if __name__ == '__main__':
         # print('\nServer is running {}'.format('-'*5))
         communi = module_communication.Communication()
         clientSocket, addr = serverSocket.accept()
-        clientSocket.settimeout(5)
+        clientSocket.settimeout(2)
         clientSocket.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
         times = handler(clientSocket, addr, communi)
         __print(times)

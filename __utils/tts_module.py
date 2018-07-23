@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
-from gtts import gTTS
-import urllib.request
+# from gtts import gTTS
+# import urllib.request
 import os
 from boto3 import client
 
